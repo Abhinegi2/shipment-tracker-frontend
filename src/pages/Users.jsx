@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { usersAPI } from "../api";
+import { usersAPI, rolesAPI } from "../api";
 import { Spinner, inputStyle, LOCATIONS } from "../components/UI";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "location_user", location: "" });
@@ -11,7 +12,13 @@ export default function Users() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    usersAPI.getAll().then(res => setUsers(res.data)).finally(() => setLoading(false));
+    Promise.all([
+      usersAPI.getAll(),
+      rolesAPI.getAll(),
+    ]).then(([uRes, rRes]) => {
+      setUsers(uRes.data);
+      setRoles(rRes.data);
+    }).finally(() => setLoading(false));
   }, []);
 
   const handleCreate = async (e) => {
@@ -61,7 +68,7 @@ export default function Users() {
                       </div>
                     </td>
                     <td style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{u.email}</td>
-                    <td style={{ padding: "12px 20px", fontSize: 13, color: "#374151" }}>{u.role === "admin" ? "Admin" : "Location User"}</td>
+                    <td style={{ padding: "12px 20px", fontSize: 13, color: "#374151", textTransform: "capitalize" }}>{u.role === "location_user" ? "Location User" : u.role}</td>
                     <td style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{u.location || "—"}</td>
                     <td style={{ padding: "12px 20px" }}>
                       <span style={{ background: u.status === "active" ? "#F0FDF4" : "#FEF2F2", color: u.status === "active" ? "#15803D" : "#DC2626", fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>{u.status === "active" ? "Active" : "Inactive"}</span>
@@ -95,8 +102,11 @@ export default function Users() {
               <div style={{ marginBottom: 14 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>Role</label>
                 <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} style={{ ...inputStyle, display: "block" }}>
-                  <option value="location_user">Location User</option>
                   <option value="admin">Admin</option>
+                  <option value="location_user">Location User</option>
+                  {roles.map(r => (
+                    <option key={r._id} value={r.name}>{r.name}</option>
+                  ))}
                 </select>
               </div>
               <div style={{ marginBottom: 20 }}>
