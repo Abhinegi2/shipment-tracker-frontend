@@ -55,7 +55,7 @@ export default function Layout({ children }) {
             <span style={{ fontSize: 12, color: "#64748B" }}>{user?.name}</span>
           </div>
         </div>
-        <div style={{ flex: 1, padding: 24 }}>{children}</div>
+        <div className="page-pad" style={{ flex: 1 }}>{children}</div>
       </div>
     </div>
   );

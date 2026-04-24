@@ -6,7 +6,7 @@ import { INDIAN_STATES, ITEM_CATEGORIES, inputStyle, FormField } from "../compon
 const Section = ({ title, children }) => (
   <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, padding: 24, marginBottom: 20 }}>
     <h3 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: 1 }}>{title}</h3>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+    <div className="grid-auto">
       {children}
     </div>
   </div>

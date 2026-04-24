@@ -65,7 +65,7 @@ export default function Roles() {
 
   return (
     <div style={{ maxWidth: 900 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+      <div className="page-header" style={{ marginBottom: 24 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#1E293B" }}>Roles & Permissions</h2>
           <p style={{ margin: "4px 0 0", fontSize: 13, color: "#64748B" }}>Define roles and control which screens each role can access</p>

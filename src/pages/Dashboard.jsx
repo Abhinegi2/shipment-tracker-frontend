@@ -35,11 +35,11 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 24 }}>
-        <StatCard label="Total Shipments" value={stats?.total} color="#2563EB" icon="📦" />
-        <StatCard label="In Transit" value={getCount("In Transit")} color="#F59E0B" icon="🚛" />
-        <StatCard label="Delivered" value={getCount("Delivered")} color="#22C55E" icon="✅" />
-        <StatCard label="Pending" value={getCount("Created")} color="#EF4444" icon="⏳" />
+      <div className="stat-row">
+        <div className="stat-card"><StatCard label="Total Shipments" value={stats?.total} color="#2563EB" icon="📦" /></div>
+        <div className="stat-card"><StatCard label="In Transit" value={getCount("In Transit")} color="#F59E0B" icon="🚛" /></div>
+        <div className="stat-card"><StatCard label="Delivered" value={getCount("Delivered")} color="#22C55E" icon="✅" /></div>
+        <div className="stat-card"><StatCard label="Pending" value={getCount("Created")} color="#EF4444" icon="⏳" /></div>
       </div>
       <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, overflow: "hidden" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #F1F5F9" }}>
@@ -50,8 +50,8 @@ export default function Dashboard() {
           <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
             <thead>
               <tr style={{ background: "#F8FAFC" }}>
-                {["Tracking ID", "Equipment", "From", "To", "Status", "Updated"].map(h => (
-                  <th key={h} style={{ padding: "10px 20px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: 0.5, whiteSpace: "nowrap" }}>{h}</th>
+                {[["Tracking ID",false],["Equipment",false],["From",true],["To",true],["Status",false],["Updated",true]].map(([h, hide]) => (
+                  <th key={h} className={hide ? "col-hide-mobile" : ""} style={{ padding: "10px 20px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: 0.5, whiteSpace: "nowrap" }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -60,10 +60,10 @@ export default function Dashboard() {
                 <tr key={s._id} style={{ borderTop: "1px solid #F1F5F9", cursor: "pointer" }} onClick={() => navigate(`/shipments/${s.trackingId}`)}>
                   <td style={{ padding: "12px 20px", fontSize: 13, color: "#2563EB", fontWeight: 600 }}>{s.trackingId}</td>
                   <td style={{ padding: "12px 20px", fontSize: 13, color: "#1E293B" }}>{s.equipment}</td>
-                  <td style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{s.fromLocation}</td>
-                  <td style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{s.toLocation}</td>
+                  <td className="col-hide-mobile" style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{s.fromLocation}</td>
+                  <td className="col-hide-mobile" style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{s.toLocation}</td>
                   <td style={{ padding: "12px 20px" }}><StatusBadge status={s.status} /></td>
-                  <td style={{ padding: "12px 20px", fontSize: 12, color: "#94A3B8", whiteSpace: "nowrap" }}>{new Date(s.updatedAt).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
+                  <td className="col-hide-mobile" style={{ padding: "12px 20px", fontSize: 12, color: "#94A3B8", whiteSpace: "nowrap" }}>{new Date(s.updatedAt).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
                 </tr>
               ))}
             </tbody>

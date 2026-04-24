@@ -64,7 +64,7 @@ export default function ShipmentDetails() {
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, fontSize: 13, color: "#64748B", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, fontSize: 13, color: "#64748B", flexWrap: "wrap", rowGap: 10 }}>
         <button onClick={() => navigate("/shipments")} style={{ background: "none", border: "none", cursor: "pointer", color: "#2563EB", fontSize: 13, padding: 0, fontWeight: 600 }}>All Shipments</button>
         <span>/</span>
         <span style={{ color: "#1E293B", fontWeight: 600 }}>{shipment.trackingId}</span>
@@ -88,7 +88,7 @@ export default function ShipmentDetails() {
           </div>
           <StatusBadge status={shipment.status} />
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 16, padding: "16px 0", borderTop: "1px solid #F1F5F9" }}>
+        <div className="grid-auto" style={{ padding: "16px 0", borderTop: "1px solid #F1F5F9" }}>
           {infoItems.map(([label, val]) => (
             <div key={label}>
               <div style={{ fontSize: 11, color: "#94A3B8", fontWeight: 600, marginBottom: 4, textTransform: "uppercase" }}>{label}</div>

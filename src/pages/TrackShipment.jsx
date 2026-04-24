@@ -88,7 +88,7 @@ export default function TrackShipment() {
                 <StatusBadge status={shipment.status} />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 24 }}>
+              <div className="grid-auto" style={{ marginBottom: 24 }}>
                 {[
                   ["Item", shipment.equipment],
                   ["Category", shipment.category || "—"],

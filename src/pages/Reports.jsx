@@ -18,7 +18,7 @@ export default function Reports() {
   return (
     <div>
       <h2 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 700, color: "#1E293B" }}>Reports</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, flexWrap: "wrap" }}>
+      <div className="grid-2">
         <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, padding: 24 }}>
           <div style={{ fontWeight: 700, fontSize: 14, color: "#1E293B", marginBottom: 20 }}>Shipments by Status</div>
           {byStatus.map(({ _id: status, count }) => {

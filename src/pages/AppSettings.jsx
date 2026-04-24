@@ -110,7 +110,7 @@ export default function AppSettings() {
 
             <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, padding: 24, marginBottom: 16 }}>
               <h3 style={{ margin: "0 0 16px", fontSize: 13, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: 1 }}>Theme Colors</h3>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 20 }}>
+              <div className="grid-auto">
                 <ColorPicker label="Primary Color (buttons, active nav)" value={form.primaryColor} onChange={set("primaryColor")} />
                 <ColorPicker label="Sidebar Background" value={form.sidebarColor} onChange={set("sidebarColor")} />
                 <ColorPicker label="Accent / Gradient Color" value={form.accentColor} onChange={set("accentColor")} />

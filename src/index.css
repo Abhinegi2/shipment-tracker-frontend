@@ -3,3 +3,53 @@ body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sa
 button { cursor: pointer; font-family: inherit; }
 input, select, textarea { font-family: inherit; }
 a { text-decoration: none; color: inherit; }
+
+/* ── Responsive grid helpers ── */
+.grid-auto   { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.grid-2      { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-4      { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.flex-wrap   { display: flex; flex-wrap: wrap; gap: 12px; }
+.page-pad    { padding: 24px; }
+
+/* ── Page header row (title + actions) ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.page-header h2 { margin: 0; font-size: 20px; font-weight: 700; color: #1E293B; }
+
+/* ── Scrollable table wrapper ── */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; }
+
+/* ── Card ── */
+.card { background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; }
+
+/* ── Stat cards row ── */
+.stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.stat-card { flex: 1; min-width: 140px; }
+
+/* ── Responsive breakpoints ── */
+@media (max-width: 768px) {
+  .grid-2  { grid-template-columns: 1fr; }
+  .grid-4  { grid-template-columns: 1fr 1fr; }
+  .page-pad { padding: 16px; }
+
+  /* stat cards — 2 per row on mobile */
+  .stat-card { min-width: calc(50% - 8px); flex: none; }
+
+  /* hide table columns marked as optional on mobile */
+  .col-hide-mobile { display: none; }
+}
+
+@media (max-width: 480px) {
+  .grid-4  { grid-template-columns: 1fr; }
+  .stat-card { min-width: calc(50% - 8px); }
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .page-header .btn-group { width: 100%; display: flex; gap: 8px; }
+  .page-header .btn-group button { flex: 1; }
+}

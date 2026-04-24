@@ -109,8 +109,8 @@ export default function Users() {
             <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
               <thead>
                 <tr style={{ background: "#F8FAFC" }}>
-                  {["Name", "Email", "Role", "Location", "Status", "Action"].map(h => (
-                    <th key={h} style={{ padding: "10px 20px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: 0.5 }}>{h}</th>
+                  {[["Name",false],["Email",true],["Role",false],["Location",true],["Status",false],["Action",false]].map(([h, hide]) => (
+                    <th key={h} className={hide ? "col-hide-mobile" : ""} style={{ padding: "10px 20px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: 0.5 }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -125,11 +125,11 @@ export default function Users() {
                         <span style={{ fontSize: 13, fontWeight: 600, color: "#1E293B" }}>{u.name}</span>
                       </div>
                     </td>
-                    <td style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{u.email}</td>
+                    <td className="col-hide-mobile" style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{u.email}</td>
                     <td style={{ padding: "12px 20px", fontSize: 13, color: "#374151", textTransform: "capitalize" }}>
                       {u.role === "location_user" ? "Location User" : u.role}
                     </td>
-                    <td style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{u.location || "—"}</td>
+                    <td className="col-hide-mobile" style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{u.location || "—"}</td>
                     <td style={{ padding: "12px 20px" }}>
                       <span style={{ background: u.status === "active" ? "#F0FDF4" : "#FEF2F2", color: u.status === "active" ? "#15803D" : "#DC2626", fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>
                         {u.status === "active" ? "Active" : "Inactive"}

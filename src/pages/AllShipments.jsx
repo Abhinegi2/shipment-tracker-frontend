@@ -60,11 +60,9 @@ export default function AllShipments() {
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
-        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#1E293B" }}>
-          All Shipments <span style={{ fontSize: 13, color: "#94A3B8", fontWeight: 400 }}>({total})</span>
-        </h2>
-        <div style={{ display: "flex", gap: 10 }}>
+      <div className="page-header">
+        <h2>All Shipments <span style={{ fontSize: 13, color: "#94A3B8", fontWeight: 400 }}>({total})</span></h2>
+        <div className="btn-group" style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <button onClick={() => exportCSV(shipments)} style={{ background: "#F1F5F9", color: "#374151", border: "none", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
             ↓ Export CSV
           </button>
@@ -92,8 +90,11 @@ export default function AllShipments() {
             <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
               <thead>
                 <tr style={{ background: "#F8FAFC" }}>
-                  {["Tracking ID", "Equipment", "Qty", "From", "To", "Status", "Updated", "Action"].map(h => (
-                    <th key={h} style={{ padding: "10px 16px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: 0.5, whiteSpace: "nowrap" }}>{h}</th>
+                  {[
+                    ["Tracking ID", false], ["Equipment", false], ["Qty", true],
+                    ["From", true], ["To", true], ["Status", false], ["Updated", true], ["Action", false]
+                  ].map(([h, hide]) => (
+                    <th key={h} className={hide ? "col-hide-mobile" : ""} style={{ padding: "10px 16px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: 0.5, whiteSpace: "nowrap" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -105,11 +106,11 @@ export default function AllShipments() {
                       <div style={{ fontSize: 13, color: "#1E293B", fontWeight: 500 }}>{s.equipment}</div>
                       {s.category && <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>{s.category}</div>}
                     </td>
-                    <td style={{ padding: "12px 16px", fontSize: 13, color: "#64748B" }}>{s.quantity}</td>
-                    <td style={{ padding: "12px 16px", fontSize: 13, color: "#64748B" }}>{s.fromLocation}</td>
-                    <td style={{ padding: "12px 16px", fontSize: 13, color: "#64748B" }}>{s.toLocation}</td>
+                    <td className="col-hide-mobile" style={{ padding: "12px 16px", fontSize: 13, color: "#64748B" }}>{s.quantity}</td>
+                    <td className="col-hide-mobile" style={{ padding: "12px 16px", fontSize: 13, color: "#64748B" }}>{s.fromLocation}</td>
+                    <td className="col-hide-mobile" style={{ padding: "12px 16px", fontSize: 13, color: "#64748B" }}>{s.toLocation}</td>
                     <td style={{ padding: "12px 16px" }}><StatusBadge status={s.status} /></td>
-                    <td style={{ padding: "12px 16px", fontSize: 12, color: "#94A3B8", whiteSpace: "nowrap" }}>{new Date(s.updatedAt).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
+                    <td className="col-hide-mobile" style={{ padding: "12px 16px", fontSize: 12, color: "#94A3B8", whiteSpace: "nowrap" }}>{new Date(s.updatedAt).toLocaleString("en-IN", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
                     <td style={{ padding: "12px 16px" }}>
                       <button onClick={() => navigate(`/shipments/${s.trackingId}`)} style={{ fontSize: 12, color: "#2563EB", background: "none", border: "1px solid #BFDBFE", borderRadius: 6, padding: "4px 12px", cursor: "pointer", fontWeight: 600 }}>View</button>
                     </td>
