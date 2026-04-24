@@ -42,12 +42,60 @@ export default function Users() {
 
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
 
+  const pendingUsers = users.filter(u => u.status === "pending");
+  const activeUsers = users.filter(u => u.status !== "pending");
+
+  const approveUser = async (user) => {
+    try {
+      await usersAPI.update(user._id, { status: "active" });
+      setUsers(u => u.map(x => x._id === user._id ? { ...x, status: "active" } : x));
+    } catch { alert("Failed to approve user"); }
+  };
+
+  const rejectUser = async (user) => {
+    if (!window.confirm(`Reject and deactivate "${user.name}"?`)) return;
+    try {
+      await usersAPI.update(user._id, { status: "inactive" });
+      setUsers(u => u.map(x => x._id === user._id ? { ...x, status: "inactive" } : x));
+    } catch { alert("Failed to reject user"); }
+  };
+
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#1E293B" }}>Users</h2>
         <button onClick={() => { setForm(emptyForm); setError(""); setShowModal(true); }} style={{ background: "var(--color-primary,#2563EB)", color: "#fff", border: "none", borderRadius: 8, padding: "9px 18px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>+ Add User</button>
       </div>
+
+      {pendingUsers.length > 0 && (
+        <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 12, padding: 20, marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+            <span style={{ fontSize: 16 }}>⏳</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#92400E" }}>Pending Approval ({pendingUsers.length})</span>
+            <span style={{ fontSize: 12, color: "#B45309" }}>— These users signed in with Google and are awaiting your approval</span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {pendingUsers.map(u => (
+              <div key={u._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#fff", border: "1px solid #FDE68A", borderRadius: 8, padding: "12px 16px", flexWrap: "wrap", gap: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  {u.avatar
+                    ? <img src={u.avatar} alt="" style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }} />
+                    : <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#FDE68A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#92400E" }}>{u.name.split(" ").map(n => n[0]).join("").slice(0, 2)}</div>
+                  }
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#1E293B" }}>{u.name}</div>
+                    <div style={{ fontSize: 12, color: "#64748B" }}>{u.email} · Google SSO</div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => approveUser(u)} style={{ padding: "6px 16px", background: "#F0FDF4", color: "#15803D", border: "1px solid #BBF7D0", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Approve</button>
+                  <button onClick={() => rejectUser(u)} style={{ padding: "6px 16px", background: "#FEF2F2", color: "#DC2626", border: "1px solid #FECACA", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Reject</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, overflow: "hidden" }}>
         {loading ? <Spinner /> : (
@@ -61,7 +109,7 @@ export default function Users() {
                 </tr>
               </thead>
               <tbody>
-                {users.map(u => (
+                {activeUsers.map(u => (
                   <tr key={u._id} style={{ borderTop: "1px solid #F1F5F9" }}>
                     <td style={{ padding: "12px 20px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

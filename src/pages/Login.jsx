@@ -30,7 +30,11 @@ export default function Login() {
       await googleLogin(credentialResponse.credential);
       navigate("/dashboard");
     } catch (err) {
-      setError("Google sign-in failed. Please try again.");
+      if (err.response?.data?.pending) {
+        setError("Your account is awaiting admin approval. You'll be notified once approved.");
+      } else {
+        setError(err.response?.data?.message || "Google sign-in failed. Please try again.");
+      }
     }
   };
 
