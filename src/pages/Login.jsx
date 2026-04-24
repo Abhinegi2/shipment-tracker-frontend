@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
+// import { GoogleLogin } from "@react-oauth/google"; // Google SSO disabled
 import { useAuth } from "../AuthContext";
 import { useSettings } from "../context/SettingsContext";
 
@@ -108,6 +108,7 @@ export default function Login() {
 
           {error && <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", color: "#DC2626", padding: "10px 14px", borderRadius: 8, fontSize: 13, marginBottom: 16 }}>{error}</div>}
 
+          {/* Google SSO disabled — uncomment to re-enable
           <div style={{ marginBottom: 20 }}>
             <GoogleLogin
               onSuccess={handleGoogle}
@@ -118,12 +119,12 @@ export default function Login() {
               text="signin_with"
             />
           </div>
-
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
             <div style={{ flex: 1, height: 1, background: "#E2E8F0" }} />
             <span style={{ fontSize: 12, color: "#94A3B8" }}>or continue with email</span>
             <div style={{ flex: 1, height: 1, background: "#E2E8F0" }} />
           </div>
+          */}
 
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: 16 }}>
