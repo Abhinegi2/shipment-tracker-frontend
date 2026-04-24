@@ -8,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pendingUser, setPendingUser] = useState(null);
   const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
 
@@ -31,12 +32,43 @@ export default function Login() {
       navigate("/dashboard");
     } catch (err) {
       if (err.response?.data?.pending) {
-        setError("Your account is awaiting admin approval. You'll be notified once approved.");
+        // Decode name/email from the Google JWT for display
+        try {
+          const payload = JSON.parse(atob(credentialResponse.credential.split(".")[1]));
+          setPendingUser({ name: payload.name, email: payload.email, picture: payload.picture });
+        } catch { setPendingUser({ name: "You", email: "" }); }
       } else {
         setError(err.response?.data?.message || "Google sign-in failed. Please try again.");
       }
     }
   };
+
+  if (pendingUser) {
+    return (
+      <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+        <div style={{ background: "#fff", borderRadius: 16, padding: 48, maxWidth: 440, width: "100%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }}>
+          {pendingUser.picture
+            ? <img src={pendingUser.picture} alt="" style={{ width: 72, height: 72, borderRadius: "50%", marginBottom: 20, objectFit: "cover" }} />
+            : <div style={{ width: 72, height: 72, borderRadius: "50%", background: "#DBEAFE", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, margin: "0 auto 20px" }}>👤</div>
+          }
+          <div style={{ fontSize: 40, marginBottom: 16 }}>⏳</div>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: "#1E293B", margin: "0 0 10px" }}>Approval Pending</h2>
+          <p style={{ fontSize: 14, color: "#64748B", margin: "0 0 6px" }}>
+            Hi <strong>{pendingUser.name}</strong>, your account has been created.
+          </p>
+          <p style={{ fontSize: 13, color: "#94A3B8", margin: "0 0 28px", lineHeight: 1.6 }}>
+            An admin needs to approve your access before you can sign in. Please contact your administrator.
+          </p>
+          <div style={{ background: "#F8FAFC", borderRadius: 10, padding: "12px 16px", marginBottom: 28, fontSize: 13, color: "#64748B" }}>
+            {pendingUser.email}
+          </div>
+          <button onClick={() => setPendingUser(null)} style={{ padding: "10px 28px", background: "#F1F5F9", color: "#374151", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+            Back to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>

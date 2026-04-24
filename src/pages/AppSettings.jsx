@@ -63,10 +63,20 @@ export default function AppSettings() {
             </FormField>
           </div>
 
-          <FormField label="Logo Image URL (optional)">
-            <input value={form.logoUrl || ""} onChange={set("logoUrl")} placeholder="https://example.com/logo.png" style={inputStyle} />
+          <FormField label="Logo Image URL (PNG, SVG, or any image link)">
+            <input value={form.logoUrl || ""} onChange={set("logoUrl")} placeholder="https://example.com/logo.svg" style={inputStyle} />
           </FormField>
-          <p style={{ fontSize: 11, color: "#94A3B8", margin: "6px 0 16px" }}>Leave empty to use emoji logo below</p>
+          {form.logoUrl ? (
+            <div style={{ margin: "8px 0 16px", display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 40, height: 40, background: form.sidebarColor || "#0F172A", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                <img src={form.logoUrl} alt="logo preview" style={{ width: 28, height: 28, objectFit: "contain" }}
+                  onError={e => { e.target.style.display = "none"; }} />
+              </div>
+              <span style={{ fontSize: 12, color: "#64748B" }}>Preview on sidebar background</span>
+            </div>
+          ) : (
+            <p style={{ fontSize: 11, color: "#94A3B8", margin: "6px 0 16px" }}>Leave empty to use emoji logo below</p>
+          )}
 
           <div>
             <label style={{ fontSize: 12, fontWeight: 600, color: "#374151", display: "block", marginBottom: 8 }}>Logo Emoji</label>
