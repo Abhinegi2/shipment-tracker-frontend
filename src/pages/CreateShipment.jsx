@@ -16,7 +16,10 @@ export default function CreateShipment() {
   const [form, setForm] = useState({
     equipment: "", itemDescription: "", category: "", weight: "",
     quantity: "", fromState: "", fromDistrict: "", fromPincode: "",
-    toState: "", toDistrict: "", toPincode: "", notes: "",
+    toState: "", toDistrict: "", toPincode: "",
+    senderName: "", senderPhone: "",
+    recipientName: "", recipientPhone: "",
+    estimatedDelivery: "", notes: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -36,12 +39,11 @@ export default function CreateShipment() {
         category: form.category,
         weight: form.weight ? parseFloat(form.weight) : undefined,
         quantity: parseInt(form.quantity),
-        fromLocation,
-        fromState: form.fromState,
-        fromDistrict: form.fromDistrict,
-        toLocation,
-        toState: form.toState,
-        toDistrict: form.toDistrict,
+        fromLocation, fromState: form.fromState, fromDistrict: form.fromDistrict,
+        toLocation, toState: form.toState, toDistrict: form.toDistrict,
+        senderName: form.senderName, senderPhone: form.senderPhone,
+        recipientName: form.recipientName, recipientPhone: form.recipientPhone,
+        estimatedDelivery: form.estimatedDelivery || undefined,
         notes: form.notes,
       };
       const res = await shipmentsAPI.create(payload);
@@ -113,10 +115,32 @@ export default function CreateShipment() {
           </FormField>
         </Section>
 
-        <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, padding: 24, marginBottom: 20 }}>
-          <FormField label="Notes (Optional)">
-            <textarea value={form.notes} onChange={set("notes")} placeholder="Additional notes or special instructions..." rows={3} style={{ ...inputStyle, resize: "vertical" }} />
+        <Section title="Sender & Recipient">
+          <FormField label="Sender Name">
+            <input value={form.senderName} onChange={set("senderName")} placeholder="Full name" style={inputStyle} />
           </FormField>
+          <FormField label="Sender Phone">
+            <input value={form.senderPhone} onChange={set("senderPhone")} placeholder="+91 XXXXX XXXXX" style={inputStyle} />
+          </FormField>
+          <FormField label="Recipient Name">
+            <input value={form.recipientName} onChange={set("recipientName")} placeholder="Full name" style={inputStyle} />
+          </FormField>
+          <FormField label="Recipient Phone">
+            <input value={form.recipientPhone} onChange={set("recipientPhone")} placeholder="+91 XXXXX XXXXX" style={inputStyle} />
+          </FormField>
+        </Section>
+
+        <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, padding: 24, marginBottom: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+            <FormField label="Estimated Delivery Date">
+              <input value={form.estimatedDelivery} onChange={set("estimatedDelivery")} type="date" min={new Date().toISOString().split("T")[0]} style={inputStyle} />
+            </FormField>
+            <div style={{ gridColumn: "1 / -1" }}>
+              <FormField label="Notes (Optional)">
+                <textarea value={form.notes} onChange={set("notes")} placeholder="Additional notes or special instructions..." rows={3} style={{ ...inputStyle, resize: "vertical" }} />
+              </FormField>
+            </div>
+          </div>
         </div>
 
         <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>

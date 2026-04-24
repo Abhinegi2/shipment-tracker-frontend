@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { usersAPI, rolesAPI } from "../api";
 import { Spinner, inputStyle, INDIAN_STATES } from "../components/UI";
+import { useToast } from "../components/Toast";
 
 const emptyForm = { name: "", email: "", password: "", role: "location_user", state: "", district: "", pincode: "" };
 
@@ -12,6 +13,7 @@ export default function Users() {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const toast = useToast();
 
   useEffect(() => {
     Promise.all([usersAPI.getAll(), rolesAPI.getAll()])
@@ -27,6 +29,7 @@ export default function Users() {
       setUsers(u => [res.data, ...u]);
       setShowModal(false);
       setForm(emptyForm);
+      toast.success("User created successfully");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create user");
     } finally { setSaving(false); }
@@ -37,7 +40,8 @@ export default function Users() {
     try {
       await usersAPI.update(user._id, { status: newStatus });
       setUsers(u => u.map(x => x._id === user._id ? { ...x, status: newStatus } : x));
-    } catch { alert("Failed to update status"); }
+      toast.success(`User ${newStatus === "active" ? "activated" : "deactivated"}`);
+    } catch { toast.error("Failed to update status"); }
   };
 
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
@@ -49,7 +53,8 @@ export default function Users() {
     try {
       await usersAPI.update(user._id, { status: "active" });
       setUsers(u => u.map(x => x._id === user._id ? { ...x, status: "active" } : x));
-    } catch { alert("Failed to approve user"); }
+      toast.success(`${user.name} approved`);
+    } catch { toast.error("Failed to approve user"); }
   };
 
   const rejectUser = async (user) => {
@@ -57,7 +62,8 @@ export default function Users() {
     try {
       await usersAPI.update(user._id, { status: "inactive" });
       setUsers(u => u.map(x => x._id === user._id ? { ...x, status: "inactive" } : x));
-    } catch { alert("Failed to reject user"); }
+      toast.info(`${user.name} rejected`);
+    } catch { toast.error("Failed to reject user"); }
   };
 
   return (

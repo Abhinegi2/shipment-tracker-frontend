@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { rolesAPI } from "../api";
 import { inputStyle, FormField } from "../components/UI";
+import { useToast } from "../components/Toast";
 
 const ALL_PERMISSIONS = [
   { key: "dashboard", label: "Dashboard", icon: "⊞" },
@@ -22,6 +23,7 @@ export default function Roles() {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const toast = useToast();
 
   const load = () => rolesAPI.getAll().then(r => setRoles(r.data)).finally(() => setLoading(false));
   useEffect(() => { load(); }, []);
@@ -42,6 +44,7 @@ export default function Roles() {
       else await rolesAPI.create(form);
       await load();
       setShowModal(false);
+      toast.success(editing ? "Role updated successfully" : "Role created successfully");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to save role");
     } finally {
@@ -54,8 +57,9 @@ export default function Roles() {
     try {
       await rolesAPI.delete(role._id);
       await load();
+      toast.success("Role deleted");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete role");
+      toast.error(err.response?.data?.message || "Failed to delete role");
     }
   };
 
