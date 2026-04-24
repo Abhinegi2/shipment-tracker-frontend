@@ -24,11 +24,30 @@ export const Spinner = () => (
   </div>
 );
 
-export const LOCATIONS = ["Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune", "Jaipur", "Dehradun", "Vizag", "Nagpur", "Guwahati", "Tehri"];
-export const STATUSES = ["Created", "Dispatched", "In Transit", "Reached", "Out for Delivery", "Delivered"];
+export const INDIAN_STATES = [
+  "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh",
+  "Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka",
+  "Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram",
+  "Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana",
+  "Tripura","Uttar Pradesh","Uttarakhand","West Bengal",
+  "Andaman & Nicobar Islands","Chandigarh","Dadra & Nagar Haveli","Daman & Diu",
+  "Delhi","Jammu & Kashmir","Ladakh","Lakshadweep","Puducherry"
+];
 
-const inp = { width: "100%", padding: "10px 14px", border: "1.5px solid #E2E8F0", borderRadius: 8, fontSize: 13, outline: "none", color: "#1E293B", background: "#fff" };
-export const inputStyle = inp;
+export const ITEM_CATEGORIES = [
+  "Electronics","Documents","Furniture","Clothing","Medical Supplies",
+  "Industrial Equipment","Food & Perishables","Automotive Parts",
+  "Books & Stationery","Sports Equipment","General Cargo","Other"
+];
+
+export const LOCATIONS = ["Delhi","Mumbai","Bangalore","Chennai","Kolkata","Hyderabad","Pune","Jaipur","Dehradun","Vizag","Nagpur","Guwahati","Tehri"];
+export const STATUSES = ["Created","Dispatched","In Transit","Reached","Out for Delivery","Delivered"];
+
+export const inputStyle = {
+  width: "100%", padding: "10px 14px", border: "1.5px solid #E2E8F0",
+  borderRadius: 8, fontSize: 13, outline: "none", color: "#1E293B", background: "#fff",
+  boxSizing: "border-box",
+};
 
 export const FormField = ({ label, required, children }) => (
   <div>
