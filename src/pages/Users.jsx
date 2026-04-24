@@ -1,33 +1,32 @@
 import { useState, useEffect } from "react";
 import { usersAPI, rolesAPI } from "../api";
-import { Spinner, inputStyle, LOCATIONS } from "../components/UI";
+import { Spinner, inputStyle, INDIAN_STATES } from "../components/UI";
+
+const emptyForm = { name: "", email: "", password: "", role: "location_user", state: "", district: "", pincode: "" };
 
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "location_user", location: "" });
+  const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    Promise.all([
-      usersAPI.getAll(),
-      rolesAPI.getAll(),
-    ]).then(([uRes, rRes]) => {
-      setUsers(uRes.data);
-      setRoles(rRes.data);
-    }).finally(() => setLoading(false));
+    Promise.all([usersAPI.getAll(), rolesAPI.getAll()])
+      .then(([uRes, rRes]) => { setUsers(uRes.data); setRoles(rRes.data); })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleCreate = async (e) => {
     e.preventDefault(); setError(""); setSaving(true);
     try {
-      const res = await usersAPI.create(form);
+      const location = [form.district, form.state, form.pincode].filter(Boolean).join(", ");
+      const res = await usersAPI.create({ ...form, location });
       setUsers(u => [res.data, ...u]);
       setShowModal(false);
-      setForm({ name: "", email: "", password: "", role: "location_user", location: "" });
+      setForm(emptyForm);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create user");
     } finally { setSaving(false); }
@@ -41,12 +40,15 @@ export default function Users() {
     } catch { alert("Failed to update status"); }
   };
 
+  const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#1E293B" }}>Users</h2>
-        <button onClick={() => setShowModal(true)} style={{ background: "#2563EB", color: "#fff", border: "none", borderRadius: 8, padding: "9px 18px", fontSize: 13, fontWeight: 600 }}>+ Add User</button>
+        <button onClick={() => { setForm(emptyForm); setError(""); setShowModal(true); }} style={{ background: "var(--color-primary,#2563EB)", color: "#fff", border: "none", borderRadius: 8, padding: "9px 18px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>+ Add User</button>
       </div>
+
       <div style={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, overflow: "hidden" }}>
         {loading ? <Spinner /> : (
           <div style={{ overflowX: "auto" }}>
@@ -63,18 +65,26 @@ export default function Users() {
                   <tr key={u._id} style={{ borderTop: "1px solid #F1F5F9" }}>
                     <td style={{ padding: "12px 20px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#DBEAFE", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#1D4ED8" }}>{u.name.split(" ").map(n => n[0]).join("").slice(0, 2)}</div>
+                        <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#DBEAFE", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#1D4ED8" }}>
+                          {u.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                        </div>
                         <span style={{ fontSize: 13, fontWeight: 600, color: "#1E293B" }}>{u.name}</span>
                       </div>
                     </td>
                     <td style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{u.email}</td>
-                    <td style={{ padding: "12px 20px", fontSize: 13, color: "#374151", textTransform: "capitalize" }}>{u.role === "location_user" ? "Location User" : u.role}</td>
+                    <td style={{ padding: "12px 20px", fontSize: 13, color: "#374151", textTransform: "capitalize" }}>
+                      {u.role === "location_user" ? "Location User" : u.role}
+                    </td>
                     <td style={{ padding: "12px 20px", fontSize: 13, color: "#64748B" }}>{u.location || "—"}</td>
                     <td style={{ padding: "12px 20px" }}>
-                      <span style={{ background: u.status === "active" ? "#F0FDF4" : "#FEF2F2", color: u.status === "active" ? "#15803D" : "#DC2626", fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>{u.status === "active" ? "Active" : "Inactive"}</span>
+                      <span style={{ background: u.status === "active" ? "#F0FDF4" : "#FEF2F2", color: u.status === "active" ? "#15803D" : "#DC2626", fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 20 }}>
+                        {u.status === "active" ? "Active" : "Inactive"}
+                      </span>
                     </td>
                     <td style={{ padding: "12px 20px" }}>
-                      <button onClick={() => toggleStatus(u)} style={{ fontSize: 12, color: "#2563EB", background: "none", border: "1px solid #BFDBFE", borderRadius: 6, padding: "4px 12px", fontWeight: 600 }}>{u.status === "active" ? "Deactivate" : "Activate"}</button>
+                      <button onClick={() => toggleStatus(u)} style={{ fontSize: 12, color: "#2563EB", background: "none", border: "1px solid #BFDBFE", borderRadius: 6, padding: "4px 12px", fontWeight: 600, cursor: "pointer" }}>
+                        {u.status === "active" ? "Deactivate" : "Activate"}
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -86,39 +96,57 @@ export default function Users() {
 
       {showModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 16 }}>
-          <div style={{ background: "#fff", borderRadius: 12, padding: 28, width: "100%", maxWidth: 440, boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
+          <div style={{ background: "#fff", borderRadius: 12, padding: 28, width: "100%", maxWidth: 480, boxShadow: "0 20px 60px rgba(0,0,0,0.2)", maxHeight: "90vh", overflowY: "auto" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
               <span style={{ fontWeight: 700, fontSize: 16, color: "#1E293B" }}>Add New User</span>
               <button onClick={() => setShowModal(false)} style={{ background: "none", border: "none", fontSize: 20, color: "#94A3B8", cursor: "pointer" }}>×</button>
             </div>
+
             {error && <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", color: "#DC2626", padding: "8px 12px", borderRadius: 8, fontSize: 13, marginBottom: 14 }}>{error}</div>}
+
             <form onSubmit={handleCreate}>
               {[["Name", "name", "text"], ["Email", "email", "email"], ["Password", "password", "password"]].map(([label, key, type]) => (
                 <div key={key} style={{ marginBottom: 14 }}>
                   <label style={{ fontSize: 12, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>{label} *</label>
-                  <input required type={type} value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} style={{ ...inputStyle, display: "block" }} />
+                  <input required type={type} value={form[key]} onChange={set(key)} style={{ ...inputStyle, display: "block" }} />
                 </div>
               ))}
+
               <div style={{ marginBottom: 14 }}>
                 <label style={{ fontSize: 12, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>Role</label>
-                <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} style={{ ...inputStyle, display: "block" }}>
+                <select value={form.role} onChange={set("role")} style={{ ...inputStyle, display: "block", cursor: "pointer" }}>
                   <option value="admin">Admin</option>
                   <option value="location_user">Location User</option>
-                  {roles.map(r => (
-                    <option key={r._id} value={r.name}>{r.name}</option>
-                  ))}
+                  {roles.map(r => <option key={r._id} value={r.name}>{r.name}</option>)}
                 </select>
               </div>
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ fontSize: 12, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 }}>Location</label>
-                <select value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} style={{ ...inputStyle, display: "block" }}>
-                  <option value="">Select location</option>
-                  {LOCATIONS.map(l => <option key={l}>{l}</option>)}
-                </select>
+
+              <div style={{ marginBottom: 6 }}>
+                <label style={{ fontSize: 12, fontWeight: 700, color: "#374151", display: "block", marginBottom: 10 }}>Location</label>
+                <div style={{ marginBottom: 12 }}>
+                  <label style={{ fontSize: 11, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 5 }}>State</label>
+                  <select value={form.state} onChange={set("state")} style={{ ...inputStyle, display: "block", cursor: "pointer" }}>
+                    <option value="">Select state</option>
+                    {INDIAN_STATES.map(s => <option key={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 20 }}>
+                  <div>
+                    <label style={{ fontSize: 11, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 5 }}>District</label>
+                    <input value={form.district} onChange={set("district")} placeholder="e.g. Dehradun" style={{ ...inputStyle, display: "block" }} />
+                  </div>
+                  <div>
+                    <label style={{ fontSize: 11, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 5 }}>Pincode</label>
+                    <input value={form.pincode} onChange={set("pincode")} placeholder="6-digit" maxLength={6} style={{ ...inputStyle, display: "block" }} />
+                  </div>
+                </div>
               </div>
+
               <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-                <button type="button" onClick={() => setShowModal(false)} style={{ padding: "9px 20px", background: "#F1F5F9", color: "#374151", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600 }}>Cancel</button>
-                <button type="submit" disabled={saving} style={{ padding: "9px 20px", background: "#2563EB", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600 }}>{saving ? "Creating..." : "Create User"}</button>
+                <button type="button" onClick={() => setShowModal(false)} style={{ padding: "9px 20px", background: "#F1F5F9", color: "#374151", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Cancel</button>
+                <button type="submit" disabled={saving} style={{ padding: "9px 20px", background: saving ? "#93C5FD" : "var(--color-primary,#2563EB)", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: saving ? "not-allowed" : "pointer" }}>
+                  {saving ? "Creating..." : "Create User"}
+                </button>
               </div>
             </form>
           </div>
