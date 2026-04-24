@@ -38,6 +38,7 @@ export const usersAPI = {
   getAll: () => api.get("/users"),
   create: (data) => api.post("/users", data),
   update: (id, data) => api.patch(`/users/${id}`, data),
+  updateProfile: (data) => api.patch("/users/me/profile", data),
 };
 
 export const rolesAPI = {

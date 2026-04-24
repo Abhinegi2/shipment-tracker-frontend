@@ -11,6 +11,7 @@ const PAGE_TITLES = {
   "/reports": "Reports",
   "/roles": "Roles & Permissions",
   "/app-settings": "App Settings",
+  "/profile": "My Profile",
 };
 
 export default function Layout({ children }) {

@@ -70,10 +70,18 @@ export default function Sidebar({ isOpen, onClose }) {
         </nav>
 
         <div style={{ padding: 8, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-          <div style={{ padding: "8px 12px", marginBottom: 4 }}>
-            <div style={{ fontSize: 12, color: "#F8FAFC", fontWeight: 600 }}>{user?.name}</div>
-            <div style={{ fontSize: 11, color: "#64748B" }}>{user?.role}</div>
-          </div>
+          <button onClick={() => go("/profile")} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "transparent", border: "none", cursor: "pointer", borderRadius: 8, marginBottom: 2 }}>
+            {user?.avatar
+              ? <img src={user.avatar} alt="" style={{ width: 28, height: 28, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+              : <div style={{ width: 28, height: 28, borderRadius: "50%", background: primary, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "#fff", flexShrink: 0 }}>
+                  {user?.name?.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                </div>
+            }
+            <div style={{ textAlign: "left", minWidth: 0 }}>
+              <div style={{ fontSize: 12, color: "#F8FAFC", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user?.name}</div>
+              <div style={{ fontSize: 10, color: "#64748B" }}>Edit profile</div>
+            </div>
+          </button>
           <button onClick={logout} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", background: "transparent", color: "#94A3B8", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13 }}>
             <span style={{ fontSize: 14, width: 18, textAlign: "center" }}>↩</span>
             Logout

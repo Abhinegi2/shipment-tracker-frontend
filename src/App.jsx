@@ -13,6 +13,7 @@ import Reports from "./pages/Reports";
 import Roles from "./pages/Roles";
 import AppSettings from "./pages/AppSettings";
 import TrackShipment from "./pages/TrackShipment";
+import Profile from "./pages/Profile";
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, loading } = useAuth();
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
           <Route path="/roles" element={<ProtectedRoute adminOnly><Roles /></ProtectedRoute>} />
           <Route path="/app-settings" element={<ProtectedRoute adminOnly><AppSettings /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/track/:id" element={<TrackShipment />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

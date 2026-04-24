@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../AuthContext";
+import { useSettings } from "../context/SettingsContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [pendingUser, setPendingUser] = useState(null);
   const { login, googleLogin } = useAuth();
+  const { settings } = useSettings();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -80,12 +82,20 @@ export default function Login() {
         }
       `}</style>
       <div className="login-card" style={{ display: "flex", width: "100%", maxWidth: 860, boxShadow: "0 20px 60px rgba(0,0,0,0.12)", borderRadius: 16, overflow: "hidden", background: "#fff" }}>
-        <div className="login-panel" style={{ flex: 1, background: "linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%)", padding: 48, display: "flex", flexDirection: "column", justifyContent: "center", color: "#fff", minWidth: 0 }}>
-          <div style={{ fontSize: 48, marginBottom: 24 }}>🚚</div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 12px", lineHeight: 1.3 }}>Track Every Shipment<br />Real-Time, Always</h1>
-          <p style={{ fontSize: 13, opacity: 0.8, margin: 0, lineHeight: 1.7 }}>Monitor equipment shipments across all locations with real-time status updates and full timeline tracking.</p>
+        <div className="login-panel" style={{ flex: 1, background: `linear-gradient(135deg, ${settings.accentColor || "#1E3A5F"} 0%, ${settings.primaryColor || "#2563EB"} 100%)`, padding: 48, display: "flex", flexDirection: "column", justifyContent: "center", color: "#fff", minWidth: 0 }}>
+          <div style={{ fontSize: 48, marginBottom: 24 }}>
+            {settings.logoUrl
+              ? <img src={settings.logoUrl} alt="logo" style={{ width: 56, height: 56, objectFit: "contain" }} />
+              : settings.logoEmoji || "🚚"}
+          </div>
+          <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 12px", lineHeight: 1.3 }}>
+            {(settings.loginHeadline || "Track Every Shipment\nReal-Time, Always").split("\n").map((line, i) => (
+              <span key={i}>{line}{i === 0 && <br />}</span>
+            ))}
+          </h1>
+          <p style={{ fontSize: 13, opacity: 0.8, margin: 0, lineHeight: 1.7 }}>{settings.loginSubtitle || "Monitor equipment shipments across all locations."}</p>
           <div style={{ marginTop: 32, display: "flex", gap: 10, flexWrap: "wrap" }}>
-            {["Real-time Updates", "Timeline View", "Multi-location"].map(t => (
+            {(settings.loginTags || ["Real-time Updates", "Timeline View", "Multi-location"]).map(t => (
               <div key={t} style={{ background: "rgba(255,255,255,0.15)", borderRadius: 8, padding: "6px 12px", fontSize: 11, fontWeight: 600 }}>{t}</div>
             ))}
           </div>

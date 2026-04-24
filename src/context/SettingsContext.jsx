@@ -11,6 +11,9 @@ const DEFAULTS = {
   primaryColor: "#2563EB",
   sidebarColor: "#0F172A",
   accentColor: "#1E3A5F",
+  loginHeadline: "Track Every Shipment\nReal-Time, Always",
+  loginSubtitle: "Monitor equipment shipments across all locations with real-time status updates and full timeline tracking.",
+  loginTags: ["Real-time Updates", "Timeline View", "Multi-location"],
 };
 
 export const SettingsProvider = ({ children }) => {
