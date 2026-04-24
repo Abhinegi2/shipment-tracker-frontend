@@ -76,8 +76,17 @@ export default function Login() {
     <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #EFF6FF 0%, #F0F9FF 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
       <style>{`
         @media (max-width: 640px) {
-          .login-panel { display: none !important; }
-          .login-card { max-width: 100% !important; }
+          .login-card {
+            max-width: 100% !important;
+            flex-direction: column !important;
+          }
+          .login-panel {
+            display: flex !important;
+            padding: 28px 24px !important;
+          }
+          .login-panel h1 {
+            font-size: 22px !important;
+          }
           .login-form-side { padding: 32px 24px !important; }
         }
       `}</style>
