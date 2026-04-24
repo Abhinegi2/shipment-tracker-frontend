@@ -40,4 +40,16 @@ export const usersAPI = {
   update: (id, data) => api.patch(`/users/${id}`, data),
 };
 
+export const rolesAPI = {
+  getAll: () => api.get("/roles"),
+  create: (data) => api.post("/roles", data),
+  update: (id, data) => api.patch(`/roles/${id}`, data),
+  delete: (id) => api.delete(`/roles/${id}`),
+};
+
+export const settingsAPI = {
+  get: () => api.get("/settings"),
+  update: (data) => api.patch("/settings", data),
+};
+
 export default api;

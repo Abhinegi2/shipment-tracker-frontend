@@ -9,6 +9,8 @@ const PAGE_TITLES = {
   "/shipments/create": "Create Shipment",
   "/users": "Users",
   "/reports": "Reports",
+  "/roles": "Roles & Permissions",
+  "/app-settings": "App Settings",
 };
 
 export default function Layout({ children }) {
