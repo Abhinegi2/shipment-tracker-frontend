@@ -58,7 +58,7 @@ export default function CreateShipment() {
   const sel = { ...inputStyle, cursor: "pointer" };
 
   return (
-    <div style={{ maxWidth: 800 }}>
+    <div style={{ width: "100%" }}>
       <h2 style={{ margin: "0 0 24px", fontSize: 20, fontWeight: 700, color: "#1E293B" }}>Create New Shipment</h2>
       {error && <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", color: "#DC2626", padding: "10px 14px", borderRadius: 8, fontSize: 13, marginBottom: 16 }}>{error}</div>}
       <form onSubmit={handleSubmit}>

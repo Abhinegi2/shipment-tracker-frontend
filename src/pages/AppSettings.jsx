@@ -57,7 +57,7 @@ export default function AppSettings() {
   const removeTag = (t) => setForm(f => ({ ...f, loginTags: (f.loginTags || []).filter(x => x !== t) }));
 
   return (
-    <div style={{ maxWidth: 700 }}>
+    <div style={{ width: "100%" }}>
       <div style={{ marginBottom: 8 }}>
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#1E293B" }}>App Settings</h2>
         <p style={{ margin: "4px 0 0", fontSize: 13, color: "#64748B" }}>Customize branding, theme colors, and login page</p>

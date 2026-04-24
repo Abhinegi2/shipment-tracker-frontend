@@ -148,7 +148,6 @@ export default function Login() {
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
-          <p style={{ fontSize: 11, color: "#94A3B8", textAlign: "center", marginTop: 20 }}>Default: admin@shiptrack.com / admin123</p>
         </div>
       </div>
     </div>

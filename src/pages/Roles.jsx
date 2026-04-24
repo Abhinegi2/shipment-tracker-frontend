@@ -64,7 +64,7 @@ export default function Roles() {
   };
 
   return (
-    <div style={{ maxWidth: 900 }}>
+    <div style={{ width: "100%" }}>
       <div className="page-header" style={{ marginBottom: 24 }}>
         <div>
           <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#1E293B" }}>Roles & Permissions</h2>
